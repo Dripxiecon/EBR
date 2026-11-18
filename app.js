@@ -57,7 +57,7 @@ const uniforms = {
   uYonic: { value: null }, uOil: { value: null }, uThick: { value: null }, uAmbiguous: { value: null },
   uUseColor: { value: 1 }, uUseWetness: { value: 1 }, uUseEro: { value: 1 },
   uUseYonic: { value: 1 }, uUseOil: { value: 1 }, uUseThick: { value: 1 }, uUseAmbiguous: { value: 1 },
-  uLightPosition: { value: keyLight.position.clone() }, uLightColor: { value: new THREE.Color(0xfff0dc) },
+  uLightPosition: { value: keyLight.position.clone() }, uLightColor: { value: new THREE.Color(0xfff0dc) }, uEroColor: { value: new THREE.Color(0x9f2947) },
   uLightIntensity: { value: 3 }, uMapStrength: { value: 1 }, uDisplacement: { value: 0.08 }
 };
 
@@ -91,7 +91,7 @@ const fragmentShader = `
   varying vec3 vWorldPosition;
   varying vec3 vWorldNormal;
   uniform sampler2D uColor, uWetness, uEro, uYonic, uOil, uThick, uAmbiguous;
-  uniform vec3 uLightPosition, uLightColor;
+  uniform vec3 uLightPosition, uLightColor, uEroColor;
   uniform float uLightIntensity, uMapStrength;
   uniform float uUseColor, uUseWetness, uUseEro, uUseYonic, uUseOil, uUseThick, uUseAmbiguous;
   void main() {
@@ -125,7 +125,7 @@ const fragmentShader = `
     vec3 diffuse = base * (0.16 + wrapDiffuse * uLightIntensity * attenuation * uLightColor);
     vec3 wetTint = vec3(0.56, 0.76, 0.94) * wetness * 0.045;
     vec3 oilTint = vec3(0.92, 0.95, 1.0) * oilLevel * specular * 0.24;
-    vec3 eroTint = vec3(0.36, 0.045, 0.12) * eroMask * 0.22;
+    vec3 eroTint = uEroColor * eroMask * 0.22;
     vec3 organicTint = base * (1.0 + organic * 0.045);
     vec3 subsurface = base * thickness * (0.08 + 0.12 * max(dot(-n, l), 0.0));
     vec3 displacementTint = vec3(0.04) * displacementInfo;
@@ -339,6 +339,7 @@ $("light-intensity").addEventListener("input", event => {
   $("intensity-value").value = value.toFixed(1);
 });
 $("light-color").addEventListener("input", event => setLightColor(event.target.value));
+$("ero-color").addEventListener("input", event => uniforms.uEroColor.value.set(event.target.value));
 $("effect-strength").addEventListener("input", event => {
   state.mapStrength = Number(event.target.value) / 100;
   uniforms.uMapStrength.value = state.mapStrength;
