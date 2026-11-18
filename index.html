@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111318">
+  <title>EBR — Material Test</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="EBR home"><span class="brand-mark">E</span><span>EBR</span></a>
+      <div class="topbar-center"><span class="status-dot"></span><span>Material test scene</span></div>
+      <div class="topbar-actions">
+        <button id="reset-view" class="icon-button" title="Reset view" aria-label="Reset view">↺</button>
+        <button id="performance-mode" class="quiet-button" aria-pressed="false">Performance mode: off</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="panel hierarchy-panel">
+        <div class="panel-heading"><span>SCENE</span><span class="muted">HIERARCHY</span></div>
+        <div class="tree">
+          <div class="tree-row tree-parent"><span class="tree-chevron">⌄</span><span class="tree-icon">◉</span><span>Scene</span></div>
+          <div class="tree-children">
+            <div class="tree-row tree-parent"><span class="tree-chevron">⌄</span><span class="tree-icon">◌</span><span>Sphere</span><span class="tree-spacer"></span><button class="visibility" data-target="sphere" aria-label="Toggle sphere">◉</button></div>
+            <div class="map-list" id="map-list">
+              <label class="tree-row map-row"><span class="tree-icon map-swatch color-swatch"></span><span>Color map</span><span class="tree-spacer"></span><input type="checkbox" data-map="color" checked aria-label="Toggle color map"></label>
+              <label class="tree-row map-row"><span class="tree-icon map-swatch wet-swatch"></span><span>Wetness map</span><span class="tree-spacer"></span><input type="checkbox" data-map="wetness" checked aria-label="Toggle wetness map"></label>
+              <label class="tree-row map-row"><span class="tree-icon map-swatch ero-swatch"></span><span>Ero map</span><span class="tree-spacer"></span><input type="checkbox" data-map="ero" checked aria-label="Toggle Ero map"></label>
+              <label class="tree-row map-row"><span class="tree-icon map-swatch yonic-swatch"></span><span>Yonic map</span><span class="tree-spacer"></span><input type="checkbox" data-map="yonic" checked aria-label="Toggle Yonic map"></label>
+              <label class="tree-row map-row"><span class="tree-icon map-swatch oil-swatch"></span><span>Oil map</span><span class="tree-spacer"></span><input type="checkbox" data-map="oil" checked aria-label="Toggle oil map"></label>
+              <label class="tree-row map-row"><span class="tree-icon map-swatch thick-swatch"></span><span>Thick map</span><span class="tree-spacer"></span><input type="checkbox" data-map="thick" checked aria-label="Toggle Thick map"></label>
+              <label class="tree-row map-row"><span class="tree-icon map-swatch ambiguous-swatch"></span><span>Ambiguous map</span><span class="tree-spacer"></span><input type="checkbox" data-map="ambiguous" checked aria-label="Toggle Ambiguous map"></label>
+            </div>
+            <div class="tree-row"><span class="tree-icon light-icon">✦</span><span>Key light</span><span class="tree-spacer"></span><button class="visibility" data-target="light" aria-label="Toggle light">◉</button></div>
+            <div class="tree-row"><span class="tree-icon camera-icon">▣</span><span>Camera</span></div>
+          </div>
+        </div>
+        <div class="panel-footnote">Select the light gizmo in the viewport to move it.</div>
+      </aside>
+
+      <section class="viewport-wrap">
+        <div class="viewport-toolbar">
+          <div class="viewport-label"><span class="live-dot"></span> LIVE VIEWPORT <span class="divider-dot">/</span> SPHERE</div>
+          <div class="viewport-tools">
+            <button id="move-tool" class="tool-button active" title="Move light">↔ Move</button>
+            <button id="rotate-tool" class="tool-button" title="Rotate light">⟳ Rotate</button>
+            <button id="toggle-gizmo" class="tool-button" aria-pressed="true">Gizmo on</button>
+          </div>
+        </div>
+        <div id="viewport" class="viewport">
+          <div class="viewport-hint" id="viewport-hint">Drag to orbit · Pinch to zoom · Select the light gizmo to move it</div>
+          <div class="viewport-loading" id="loading">Preparing viewport…</div>
+        </div>
+        <div class="viewport-footer"><span id="render-status">WEBGL · INITIALIZING</span><span id="fps-readout">— FPS</span><span>DRAG LIGHT GIZMO TO TEST ANGLES</span></div>
+      </section>
+
+      <aside class="panel settings-panel">
+        <div class="panel-heading"><span>TEST CONTROLS</span><span class="muted">EBR</span></div>
+        <section class="control-section">
+          <div class="section-title">COLOR INPUT</div>
+          <p class="help-text">Use a regular color map. EBR generates experimental companion maps from it.</p>
+          <label class="file-button" for="color-upload">＋ Upload color map</label>
+          <input id="color-upload" class="visually-hidden" type="file" accept="image/png,image/jpeg,image/webp">
+          <button id="generate-maps" class="primary-button">Generate all maps <span>↗</span></button>
+          <div id="source-name" class="source-name">Using procedural test texture</div>
+        </section>
+        <section class="control-section">
+          <div class="section-title">LIGHT SOURCE</div>
+          <label class="field-label" for="light-intensity">Intensity <output id="intensity-value">3.0</output></label>
+          <input id="light-intensity" type="range" min="0" max="12" step="0.1" value="3">
+          <label class="field-label" for="light-color">Light color</label>
+          <input id="light-color" class="color-input" type="color" value="#fff0dc">
+          <div class="field-note">Position and direction are controlled with the viewport gizmo.</div>
+        </section>
+        <section class="control-section">
+          <div class="section-title">MATERIAL RESPONSE</div>
+          <label class="field-label" for="effect-strength">Overall map strength <output id="strength-value">100%</output></label>
+          <input id="effect-strength" type="range" min="0" max="100" step="1" value="100">
+          <label class="field-label" for="displacement">Displacement preview <output id="displacement-value">0.08</output></label>
+          <input id="displacement" type="range" min="0" max="0.2" step="0.005" value="0.08">
+          <div class="field-note">Experimental decoder. Palette semantics will be refined as the map standard is finalized.</div>
+        </section>
+        <section class="control-section map-preview-section">
+          <div class="section-title">MAP PREVIEW</div>
+          <div id="map-preview" class="map-preview"><span>Choose a map in the hierarchy</span></div>
+          <div id="map-preview-name" class="field-note">Generated maps appear here.</div>
+        </section>
+      </aside>
+    </main>
+    <footer class="app-footer"><span>EBR MATERIAL PROTOTYPE · 0.1.0</span><span>Built for real-time map experiments</span></footer>
+  </div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
