@@ -8,7 +8,7 @@ This repository currently contains the first interactive rendering prototype. It
 
 - Web-based 3D viewport using WebGL through Three.js.
 - UV sphere test object.
-- Movable point light with transform gizmo.
+- Movable point light with a three-axis transform gizmo.\n- Adjustable Ero effect color, separate from the Ero mask texture.
 - Orbit camera controls.
 - Independent visibility switches for all seven EBR maps.
 - Color-map upload and procedural fallback texture.
@@ -20,7 +20,7 @@ This repository currently contains the first interactive rendering prototype. It
 1. **Color** — base surface color.
 2. **Wetness** — blue-tinted grayscale wetness data.
 3. **Ero** — maroon/red effect mask. Its shader settings determine the resulting effect color.
-4. **Yonic** — green-scale organic surface data, combining optical response with encoded surface-detail behavior.
+4. **Yonic** — green-scale organic surface data. It is intended to combine optical response with encoded surface-detail behavior; its special-value decoder remains under development.
 5. **Oil** — neutral grayscale oil/specular intensity.
 6. **Thick** — grayscale with a subtle purple tint, controlling subsurface-thickness behavior.
 7. **Ambiguous** — a purple/orange/yellow displacement palette. Purple represents complex displacement, orange represents intermediate displacement, and yellow represents the lightest displacement range.
