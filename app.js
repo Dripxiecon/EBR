@@ -350,14 +350,6 @@ $("displacement").addEventListener("input", event => {
   uniforms.uDisplacement.value = state.displacement;
   $("displacement-value").value = state.displacement.toFixed(3);
 });
-$("move-tool").addEventListener("click", () => {
-  lightGizmo.setMode("translate");
-  $("move-tool").classList.add("active"); $("rotate-tool").classList.remove("active");
-});
-$("rotate-tool").addEventListener("click", () => {
-  lightGizmo.setMode("rotate");
-  $("rotate-tool").classList.add("active"); $("move-tool").classList.remove("active");
-});
 $("toggle-gizmo").addEventListener("click", event => {
   lightGizmo.enabled = !lightGizmo.enabled;
   event.currentTarget.setAttribute("aria-pressed", String(lightGizmo.enabled));
